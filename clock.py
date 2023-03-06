@@ -13,7 +13,7 @@ def consumer(conn):
     msg_queue = []
     sleepVal = 1/random.randint(1,6)
     clock = 0
-    
+
     while True:
         time.sleep(sleepVal)
 
@@ -24,6 +24,20 @@ def consumer(conn):
         else:
             n = random.randint(1,10)
             if n == 1:
+                # send to one of the other machines a message that is the local logical clock time
+                clock += 1
+                print("Message sent: " + time.time() + ", " + clock)
+            elif n == 2:
+                # send to the other machine a message that is the local logical clock time
+                clock += 1
+                print("Message sent: " + time.time() + ", " + clock)
+            elif n == 3:
+                # send to both of the other virtual machines a message that is the logical clock time
+                clock += 1
+                print("Message sent: " + time.time() + ", " + clock)
+            else:
+                clock += 1
+                print("Message sent: " + time.time() + ", " + clock)
 
 
 

@@ -7,7 +7,7 @@ import time
 from threading import Thread 
 import random
 
-def consumer(conn):
+def consumer(conn, port):
     print("consumer accepted connection" + str(conn) + "\n")
     msg_queue = []
     sleepVal = 0.900
@@ -16,7 +16,7 @@ def consumer(conn):
         data = conn.recv(1024)
         print("msg received\n")
         dataVal = data.decode('ascii')
-        print("msg received:", dataVal)
+        print("msg received at " + str(port) + ": " + dataVal)
         msg_queue.append(dataVal)
 
 def producer(portVal):
@@ -27,13 +27,13 @@ def producer(portVal):
     # sema acquire
     try:
         s.connect((host,port))
-        print("Client-side connection success to port val:" + str(portVal) + "\n")
+        print("Client-side connection success to port val: " + str(portVal) + "\n")
 
         while True:
-            codeVal = str(code)
+            codeVal = str(code) + "*^*"
             time.sleep(sleepVal)
             s.send(codeVal.encode('ascii'))
-            print("msg sent", codeVal)
+            print("msg sent to " + str(port) + ": " + codeVal)
 
     except socket.error as e: print ("Error connecting producer: %s" % e)
 
@@ -48,7 +48,7 @@ def init_machine(config):
     s.listen()
     while True:
         conn, addr = s.accept()
-        start_new_thread(consumer, (conn,))
+        start_new_thread(consumer, (conn,PORT))
 
 def machine(config):
     config.append(os.getpid())
